@@ -1,52 +1,65 @@
-# Learn Docling in 1 Hour 🚀
+# Docling Implementation
 
 **Docling** is IBM's powerful document parsing library that converts PDFs, Word docs, and other formats into structured data (markdown, JSON, etc.).
 
-## 🎯 Learning Path (60 minutes)
+This repository contains practical examples and exercises for learning and implementing Docling.
 
-### Phase 1: Setup & Basics (15 min)
-- **File**: `01_basics/exercise1_simple_conversion.py`
-- Learn to convert a PDF to markdown
-- Extract text from documents
+## 📂 Project Structure
 
-### Phase 2: Intermediate (20 min)
-- **File**: `02_intermediate/exercise2_tables.py`
-- Extract tables from PDFs
-- Work with document structure
-- **File**: `02_intermediate/exercise3_metadata.py`
-- Extract document metadata and images
-
-### Phase 3: Advanced (15 min)
-- **File**: `03_advanced/exercise4_custom_pipeline.py`
-- Customize the conversion pipeline
-- Export to different formats
-
-### Phase 4: Practice Challenge (10 min)
-- **File**: `04_challenge/final_challenge.py`
-- Build a complete document processor
+```
+DoclingImplementation/
+├── 01_basics/                  # Basic conversion examples
+│   └── exercise1_simple_conversion.py
+├── 02_intermediate/            # Intermediate features
+│   ├── excercise2_tables.py    # Table extraction
+│   └── excercise3_structure.py # Document structure analysis
+├── data/                       # Sample documents for processing
+├── output/                     # Generated output files
+├── document_analyzer.py        # Main document analysis script
+└── requirements.txt            # Python dependencies
+```
 
 ## 📦 Installation
 
 ```bash
-# Install docling
-pip install docling
+# Clone the repository
+git clone <your-repo-url>
+cd DoclingImplementation
 
-# Optional: For better PDF support
-pip install pypdfium2
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-## 🎓 How to Use This Tutorial
+### Requirements
+- Python 3.8+
+- docling
+- pandas
 
-1. Each exercise file has:
-   - `# TODO:` comments where you write code
-   - `# HINT:` to guide you
-   - `# SOLUTION:` (commented out) if you get stuck
+## 🚀 Getting Started
 
-2. Test data is in the `sample_docs/` folder
+### 1. Basic Conversion
+Start with simple document conversion:
+```bash
+python 01_basics/exercise1_simple_conversion.py
+```
 
-3. Work through exercises in order
+### 2. Table Extraction
+Extract tables from documents:
+```bash
+python 02_intermediate/excercise2_tables.py
+```
 
-4. Aim for ~10-15 min per section
+### 3. Document Structure Analysis
+Analyze document structure and hierarchy:
+```bash
+python 02_intermediate/excercise3_structure.py
+```
+
+### 4. Document Analyzer
+Use the main analyzer for comprehensive document processing:
+```bash
+python document_analyzer.py
+```
 
 ## 📚 Quick Reference
 
@@ -60,7 +73,7 @@ converter = DocumentConverter()
 result = converter.convert("document.pdf")
 ```
 
-**Export Formats**: 
+**Export Formats**:
 - Markdown (`.export_to_markdown()`)
 - JSON (`.export_to_json()`)
 - Doctags (`.export_to_doctags()`)
@@ -70,8 +83,18 @@ result = converter.convert("document.pdf")
 - `ConversionResult`: Contains parsed document
 - `PipelineOptions`: Configure conversion behavior
 
-## 🚀 Getting Started
+## 📁 Data Folder
 
-Start with: `python 01_basics/exercise1_simple_conversion.py`
+The `data/` folder contains sample documents for testing and learning purposes.
 
-Good luck! 💪
+## 📤 Output Folder
+
+The `output/` folder stores generated files from document processing (markdown, JSON, etc.).
+
+## 🤝 Contributing
+
+Feel free to add more examples and exercises to help others learn Docling!
+
+## 📄 License
+
+This project is for educational purposes.
