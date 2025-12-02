@@ -1,0 +1,17 @@
+json_data = result.document.export_to_dict()
+    with open("./output/full_debug.json", "w", encoding="utf-8") as f:
+        json.dump(json_data, f, indent=2, ensure_ascii=False)
+
+    print("\n✅ Saved full extraction to ./output/full_debug.json")
+    print("📋 Open this file to see EVERYTHING Docling extracted")
+
+    print(f"\n🔍 Debug Info:")
+    print(f"  - Number of pages: {len(doc.pages) if hasattr(doc, 'pages') else 'N/A'}")
+    print(f"  - Number of text elements: {len(doc.texts) if hasattr(doc, 'texts') else 'N/A'}")
+    print(f"  - Number of tables: {len(doc.tables) if hasattr(doc, 'tables') else 0}")
+    print(f"  - Number of pictures: {len(doc.pictures) if hasattr(doc, 'pictures') else 0}")
+
+    # Print all text elements
+    print(f"\n📝 All extracted text:")
+    for i, text in enumerate(doc.texts[:10]):  # First 10 items
+        print(f"{i+1}. [{text.label}]: {text.text[:100]}")
