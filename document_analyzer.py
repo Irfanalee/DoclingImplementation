@@ -3,6 +3,8 @@ from pathlib import Path
 import json
 from datetime import datetime
 import pandas as pd
+import fitz  # PyMuPDF
+
 
 class DocumentAnalyzer:
     def __init__(self, pdf_path: str):
@@ -23,9 +25,10 @@ class DocumentAnalyzer:
         stats = self._get_statistics()
 
         # Extract components
-        self._save_tables()
-        self._save_markdown()
-        self._create_summary_report(stats)
+        #self._save_tables()
+        self._save_images()
+        #self._save_markdown()
+        #self._create_summary_report(stats)
 
         print("Analysis complete.")
 
@@ -70,7 +73,64 @@ class DocumentAnalyzer:
             json.dump(report, f, indent=4)
         print(f"Summary report saved to: {report_path}")
 
+    def _save_images(self):
+        # Create images directory  
+        images_dir = Path(self.pdf_path).parent / f"{Path(self.pdf_path).stem}_images"
+        images_dir.mkdir(exist_ok=True)
+
+        saved_count = 0
+        print("\nExtracting images...")
+
+        # I have used PyMuPDF to extract images directly from the PDF , 
+        # docling's image extraction is not reliable.
+
+        doc = fitz.open(self.pdf_path)
+        for page_num in range(len(doc)):
+            page = doc[page_num]
+            images = page.get_images()
+            for img_index, img in enumerate(images):
+                xref = img[0]
+                base_image = doc.extract_image(xref)
+                image_bytes = base_image["image"]
+                image_ext = base_image["ext"]
+                
+                image_path = images_dir / f"page{page_num+1}_img{img_index+1}.{image_ext}"
+                with open(image_path, "wb") as img_file:
+                    img_file.write(image_bytes)
+                print(f"Image from page {page_num+1}, index {img_index+1} saved to: {image_path}")
+                saved_count += 1
+
+        """ deprecated because docling is not good at extracting images. 
+        Save all images from the document. 
+        if not self.doc.pictures:
+            print("No images found in the document.")
+            return
+        
+        
+        for i, picture in enumerate(self.doc.pictures, 1):
+            try:
+                # Pass the document to get_image()
+                image_data = picture.get_image(self.doc)
+                
+                if image_data:
+                    from PIL import Image
+                    import io
+                    
+                    # Convert to PIL Image and save
+                    img = Image.open(io.BytesIO(image_data))
+                    image_path = images_dir / f"image_{i}.png"
+                    img.save(image_path)
+                    print(f"Image {i} saved to: {image_path}")
+                    saved_count += 1
+                else:
+                    print(f"Picture {i}: No image data returned")
+            except Exception as e:
+                print(f"Picture {i}: Could not extract - {e}")
+        """
+        
+        print(f"\n✅ Total images saved: {saved_count}/{len(self.doc.pictures)}")
+
 if __name__ == "__main__":
-    pdf_path = "./data/the-state-of-ai-in-2025-agents-innovation-and-transformation.pdf"
+    pdf_path = "./data/GRA-82881-Group1-Consultancy-project.pdf"
     analyzer = DocumentAnalyzer(pdf_path)
     analyzer.analyze()
