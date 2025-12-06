@@ -25,10 +25,10 @@ class DocumentAnalyzer:
         stats = self._get_statistics()
 
         # Extract components
-        #self._save_tables()
+        self._save_tables()
         self._save_images()
-        #self._save_markdown()
-        #self._create_summary_report(stats)
+        self._save_markdown()
+        self._create_summary_report(stats)
 
         print("Analysis complete.")
 
@@ -131,6 +131,6 @@ class DocumentAnalyzer:
         print(f"\n✅ Total images saved: {saved_count}/{len(self.doc.pictures)}")
 
 if __name__ == "__main__":
-    pdf_path = "./data/GRA-82881-Group1-Consultancy-project.pdf"
+    pdf_path = "./data/openAI-File.pdf"
     analyzer = DocumentAnalyzer(pdf_path)
     analyzer.analyze()
