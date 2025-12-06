@@ -1,3 +1,6 @@
 docling
 pandas
 PyMuPDF
+fastapi
+uvicorn[standard]
+python-multipart
