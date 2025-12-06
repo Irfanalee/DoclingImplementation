@@ -2,7 +2,6 @@ from docling.document_converter import DocumentConverter
 from pathlib import Path
 import json
 from datetime import datetime
-import pandas as pd
 import fitz  # PyMuPDF
 
 
@@ -54,30 +53,39 @@ class DocumentAnalyzer:
         if self.doc is None:
             raise ValueError("Document not converted yet. Call analyze() first.")
 
+        output_dir = Path("output")
+        output_dir.mkdir(exist_ok=True)
+
         for i, table in enumerate(self.doc.tables):
             df = table.export_to_dataframe()
-            csv_path = Path(self.pdf_path).with_name(f"{Path(self.pdf_path).stem}_table_{i+1}.csv")
+            csv_path = output_dir / f"{Path(self.pdf_path).stem}_table_{i+1}.csv"
             df.to_csv(csv_path, index=False)
             print(f"Table {i+1} saved to: {csv_path}")
 
     def _save_markdown(self):
-        """ Extract and save all tables as CSV. """
+        """ Extract and save markdown output. """
         if self.result is None:
             raise ValueError("Document not converted yet. Call analyze() first.")
 
+        output_dir = Path("output")
+        output_dir.mkdir(exist_ok=True)
+
         markdown = self.result.document.export_to_markdown()
-        markdown_path = Path(self.pdf_path).with_suffix('.md')
+        markdown_path = output_dir / f"{Path(self.pdf_path).stem}.md"
         with open(markdown_path, 'w', encoding='utf-8') as f:
             f.write(markdown)
         print(f"Markdown saved to: {markdown_path}")
     
     def _create_summary_report(self, stats):
         """ Create and save a summary report as JSON. """
+        output_dir = Path("output")
+        output_dir.mkdir(exist_ok=True)
+
         report = {
             "Analysis Date": datetime.now().isoformat(),
             "Document Statistics": stats
         }
-        report_path = Path(self.pdf_path).with_name(f"{Path(self.pdf_path).stem}_summary.json")
+        report_path = output_dir / f"{Path(self.pdf_path).stem}_summary.json"
         with open(report_path, 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=4)
         print(f"Summary report saved to: {report_path}")
@@ -87,8 +95,10 @@ class DocumentAnalyzer:
         if self.doc is None:
             raise ValueError("Document not converted yet. Call analyze() first.")
 
-        # Create images directory
-        images_dir = Path(self.pdf_path).parent / f"{Path(self.pdf_path).stem}_images"
+        # Create images directory in output folder
+        output_dir = Path("output")
+        output_dir.mkdir(exist_ok=True)
+        images_dir = output_dir / f"{Path(self.pdf_path).stem}_images"
         images_dir.mkdir(exist_ok=True)
 
         saved_count = 0
@@ -144,6 +154,6 @@ class DocumentAnalyzer:
         print(f"\n✅ Total images saved: {saved_count}/{len(self.doc.pictures)}")
 
 if __name__ == "__main__":
-    pdf_path = "./data/openAI-File.pdf"
+    pdf_path = "./data/Managerial-economics.pdf"
     analyzer = DocumentAnalyzer(pdf_path)
     analyzer.analyze()
