@@ -34,9 +34,12 @@ class DocumentAnalyzer:
 
     def _get_statistics(self):
         """ Gather statistics about the document. """
+        if self.doc is None:
+            raise ValueError("Document not converted yet. Call analyze() first.")
+
         # Count headings from text elements
         headings = [t for t in self.doc.texts if 'heading' in t.label.lower() or 'section_header' in t.label.lower()]
-        
+
         stats = {
             "Document Name": self.doc.name,
             "Total Text Elements": len(self.doc.texts),
@@ -48,6 +51,9 @@ class DocumentAnalyzer:
     
     def _save_tables(self):
         """ Extract and save all tables as CSV. """
+        if self.doc is None:
+            raise ValueError("Document not converted yet. Call analyze() first.")
+
         for i, table in enumerate(self.doc.tables):
             df = table.export_to_dataframe()
             csv_path = Path(self.pdf_path).with_name(f"{Path(self.pdf_path).stem}_table_{i+1}.csv")
@@ -56,6 +62,9 @@ class DocumentAnalyzer:
 
     def _save_markdown(self):
         """ Extract and save all tables as CSV. """
+        if self.result is None:
+            raise ValueError("Document not converted yet. Call analyze() first.")
+
         markdown = self.result.document.export_to_markdown()
         markdown_path = Path(self.pdf_path).with_suffix('.md')
         with open(markdown_path, 'w', encoding='utf-8') as f:
@@ -74,14 +83,18 @@ class DocumentAnalyzer:
         print(f"Summary report saved to: {report_path}")
 
     def _save_images(self):
-        # Create images directory  
+        """ Extract and save images from PDF. """
+        if self.doc is None:
+            raise ValueError("Document not converted yet. Call analyze() first.")
+
+        # Create images directory
         images_dir = Path(self.pdf_path).parent / f"{Path(self.pdf_path).stem}_images"
         images_dir.mkdir(exist_ok=True)
 
         saved_count = 0
         print("\nExtracting images...")
 
-        # I have used PyMuPDF to extract images directly from the PDF , 
+        # I have used PyMuPDF to extract images directly from the PDF ,
         # docling's image extraction is not reliable.
 
         doc = fitz.open(self.pdf_path)
